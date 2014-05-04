@@ -1,0 +1,6 @@
+#org.skyway.core settings
+#Fri May 02 06:39:33 PKT 2014
+version=10.0.0.qualifier
+default.top.level.package=com.data
+models.folder.name=.springDSL
+initialized=true
