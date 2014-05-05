@@ -225,7 +225,7 @@ function PollEvent()
 <body onLoad="onLoad()" bgcolor="#ffffff" onResize="OnResize()">
 	<table bgcolor="#ffffff" width="100%" cellspacing="0" cellpadding="0" border=0 id="tblBanner">
 		<tr>
-			<td valign=top colspan=2 height=30 width=100%><img src="gifs/jsp_banner.gif"></td>
+			<td valign=top colspan=2 height=30 width=100%></td>
 		</tr>
 	</table>
 	

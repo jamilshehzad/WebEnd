@@ -57,7 +57,8 @@ Author	 : mano
 				 </tr>
 				 <%}%>
 			 <tbody>
-		 </table>		
+		 </table>	
+		 <jsp:include page="index.jsp"></jsp:include>	
 		 <br/>
 		 <%}else{ %>
 		 	 <b>This page is not authorized for you to view. Please login.</b>		

@@ -597,7 +597,6 @@ public class VLXGenerator {
 			mLastError = "Error serializing VLX document: "+e.getMessage();
 			return null;
 		}
-		 System.out.println(resultStringWriter.toString());
 		return resultStringWriter.toString();
 	}
 }
