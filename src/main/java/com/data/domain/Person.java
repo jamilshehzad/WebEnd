@@ -1,36 +1,19 @@
-package com.data.domain;
+package com.data.Domain;
 
 import java.io.Serializable;
-
-import java.lang.StringBuilder;
-
 import java.util.Calendar;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-
-import javax.xml.bind.annotation.*;
-
-import javax.persistence.*;
-
-/**
- */
-
-@Entity
-@NamedQueries({
-		@NamedQuery(name = "findAllPersons", query = "select myPerson from Person myPerson"),
-		@NamedQuery(name = "findPersonByBirthDate", query = "select myPerson from Person myPerson where myPerson.birthDate = ?1"),
-		@NamedQuery(name = "findPersonByBirthDateAfter", query = "select myPerson from Person myPerson where myPerson.birthDate > ?1"),
-		@NamedQuery(name = "findPersonByBirthDateBefore", query = "select myPerson from Person myPerson where myPerson.birthDate < ?1"),
-		@NamedQuery(name = "findPersonByFirstName", query = "select myPerson from Person myPerson where myPerson.firstName = ?1"),
-		@NamedQuery(name = "findPersonByFirstNameContaining", query = "select myPerson from Person myPerson where myPerson.firstName like ?1"),
-		@NamedQuery(name = "findPersonByFunction", query = "select myPerson from Person myPerson where myPerson.function = ?1"),
-		@NamedQuery(name = "findPersonByFunctionContaining", query = "select myPerson from Person myPerson where myPerson.function like ?1"),
-		@NamedQuery(name = "findPersonById", query = "select myPerson from Person myPerson where myPerson.id = ?1"),
-		@NamedQuery(name = "findPersonByLastName", query = "select myPerson from Person myPerson where myPerson.lastName = ?1"),
-		@NamedQuery(name = "findPersonByLastNameContaining", query = "select myPerson from Person myPerson where myPerson.lastName like ?1"),
-		@NamedQuery(name = "findPersonByPrimaryKey", query = "select myPerson from Person myPerson where myPerson.id = ?1") })
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 @Table(catalog = "webdata", name = "person")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(namespace = "WebEnd/com/data/domain", name = "Person")

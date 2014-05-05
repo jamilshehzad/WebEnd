@@ -1,0 +1,18 @@
+﻿<vlx:vlx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" service="NewService" xmlns:vlx="http://www.i2group.com/Schemas/2001-12-07/VLXSchema">
+    <chartCommands>
+	<errorMessage/>
+    </chartCommands>
+    <typeCatalogue identityProperty="guid8E71E7F2-5608-4441-8355-7EF2194F1D20">
+        <endTypes />
+        <linkTypes />
+        <forms />
+        <services>
+            <service localName="NewService" sGUID="guidA11C542A-7709-4989-9154-B67F852D3AB3" serviceName="New Service" providerName="New Provider" />
+        </services>
+    </typeCatalogue>
+    <lcx:LibraryCatalogue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" VersionMajor="1" VersionMinor="13" VersionRelease="7" VersionBuild="36" LocaleHex="XXX" xmlns:lcx="http://www.i2group.com/Schemas/2001-12-07/LCXSchema" />
+    <content>
+        <ends />
+        <links />
+    </content>
+</vlx:vlx>

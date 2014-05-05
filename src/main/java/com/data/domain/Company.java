@@ -1,32 +1,19 @@
-package com.data.domain;
+package com.data.Domain;
 
 import java.io.Serializable;
-
-import java.lang.StringBuilder;
-
 import java.util.Calendar;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-
-import javax.xml.bind.annotation.*;
-
-import javax.persistence.*;
-
-/**
- */
-
-@Entity
-@NamedQueries({
-		@NamedQuery(name = "findAllCompanys", query = "select myCompany from Company myCompany"),
-		@NamedQuery(name = "findCompanyByAddress", query = "select myCompany from Company myCompany where myCompany.address = ?1"),
-		@NamedQuery(name = "findCompanyByAddressContaining", query = "select myCompany from Company myCompany where myCompany.address like ?1"),
-		@NamedQuery(name = "findCompanyByCreationDate", query = "select myCompany from Company myCompany where myCompany.creationDate = ?1"),
-		@NamedQuery(name = "findCompanyById", query = "select myCompany from Company myCompany where myCompany.id = ?1"),
-		@NamedQuery(name = "findCompanyByName", query = "select myCompany from Company myCompany where myCompany.name = ?1"),
-		@NamedQuery(name = "findCompanyByNameContaining", query = "select myCompany from Company myCompany where myCompany.name like ?1"),
-		@NamedQuery(name = "findCompanyByPrimaryKey", query = "select myCompany from Company myCompany where myCompany.id = ?1") })
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 @Table(catalog = "webdata", name = "company")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(namespace = "WebEnd/com/data/domain", name = "Company")
