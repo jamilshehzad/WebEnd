@@ -1,11 +1,16 @@
 package com.data.Domain;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -17,13 +22,34 @@ import javax.xml.bind.annotation.XmlType;
 @Table(catalog = "webdata", name = "person")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(namespace = "WebEnd/com/data/domain", name = "Person")
+@Entity
 public class Person implements Serializable {
 	private static final long serialVersionUID = 1L;
+	
+	public Person(String firstName,String lastName,String dateOfBirth,String function){
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.function = function;
+		String cDate = dateOfBirth;
+		SimpleDateFormat df = new SimpleDateFormat("YYYY-MM-DD");
+		try {
+			this.birthDate = Calendar.getInstance();
+			this.birthDate.setTime(df.parse(dateOfBirth));
+		} catch (ParseException e) {
+			try {
+				this.birthDate.setTime(df.parse(new Date().toString()));
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 */
 
 	@Column(name = "id", nullable = false)
+	@GeneratedValue
 	@Basic(fetch = FetchType.EAGER)
 	@Id
 	@XmlElement

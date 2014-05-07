@@ -5,26 +5,27 @@ Author	 : Jamil
 --%>
 <%@page import="java.net.URL"%>
 <%@page import="java.util.List"%>
-<%@page import="com.data.Service.LoginService"%>
+<%@page import="com.data.Service.PersonService"%>
 <%@page import="java.util.Date"%>
+<%@page import="com.data.Domain.Person"%>
 <%@page import="com.data.Domain.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 	 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	 <link rel="stylesheet" type="text/css" href="css/style.css"/>
-	 <title>Home Page</title>	
+	 <link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+	 <title>Person List</title>	
 </head>
 <body>
 <center>
 	 <div id="mystyle">
-		 <h1>Web End Integration</h1>
-		 <%
-		 	URL x = new URL( request.getRequestURL().toString() );
-			String href = x.getProtocol() + "://" + x.getHost() +
-			":" + x.getPort() + request.getContextPath();
-		  %>
+	 <%
+	 	URL x = new URL( request.getRequestURL().toString() );
+		String href = x.getProtocol() + "://" + x.getHost() +
+		":" + x.getPort() + request.getContextPath();
+	  %>
+		 <h1>Person List</h1>
 		 <%if(null != session && null != session.getAttribute("user")){ %>
 		 <p><a href="http://localhost:8080/WebEnd">http://localhost:8080/WebEnd</a><br/>
 			 <b>Web End</b><br/>
@@ -40,25 +41,23 @@ Author	 : Jamil
 		 <table>
 			 <thead>
 				 <tr>
-					 <th>User ID</th>
 					 <th>First Name</th>
-					 <th>Middle Name</th>
 					 <th>Last Name</th>
-					 <th>Email</th>					
+					 <th>Birth Date</th>					
+					 <th>Function</th>
 				 </tr>
 			 </thead>
 			 <tbody>
 				 <%
-					 LoginService loginService = new LoginService();
-					 List<User> list = loginService.getListOfUsers();
-					 for (User u : list) {
+					 PersonService personService = new PersonService();
+					 List<Person> list = personService.getListOfPersons();
+					 for (Person u : list) {
 				 %>
 				 <tr>
-					 <td><%=u.getUserId()%></td>
 					 <td><%=u.getFirstName()%></td>
-					 <td><%=u.getMiddleName()%></td>
 					 <td><%=u.getLastName()%></td>
-					 <td><%=u.getEmail()%></td>
+					 <td><%=u.getBirthDate()%></td>
+					 <td><%=u.getFunction()%></td>
 				 </tr>
 				 <%}%>
 			 <tbody>

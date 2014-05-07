@@ -1,6 +1,7 @@
 package com.data.Controller;
 
 import java.io.IOException;
+import java.net.URL;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +15,9 @@ import com.data.Service.LoginService;
 public class LoginServlet extends HttpServlet {
 protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 		 throws ServletException, IOException {	
+	URL x = new URL( request.getRequestURL().toString() );
+	String href = x.getProtocol() + "://" + x.getHost() +
+	":" + x.getPort() + request.getContextPath();
 	 String userId = request.getParameter("userId");	
 	 String password = request.getParameter("password");
 	 LoginService loginService = new LoginService();
@@ -21,10 +25,10 @@ protected void processRequest(HttpServletRequest request, HttpServletResponse re
 	 User user = loginService.getUserByUserId(userId);
 	 if(result == true){
 		 request.getSession().setAttribute("user", user);		
-		 response.sendRedirect("home.jsp");
+		 response.sendRedirect(href+"/home.jsp");
 	 }
 	 else{
-		 response.sendRedirect("login.jsp");
+		 response.sendRedirect(href+"/login.jsp");
 	 }
 }
 @Override

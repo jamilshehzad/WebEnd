@@ -1,9 +1,9 @@
 <%--
 Document : register
-Created on : Nov 5, 2012, 7:22:35 PM
-Author	 : mano
+Created on : May 02, 2014
+Author	 : Jamil
 --%>
-
+<%@page import="java.net.URL"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -15,7 +15,12 @@ Author	 : mano
 <body>
 <center>
 	 <div id="mystyle" class="myform">
-		 <form id="form" name="form" method="post" action="RegisterServlet">
+	 <%
+		 	URL x = new URL( request.getRequestURL().toString() );
+			String href = x.getProtocol() + "://" + x.getHost() +
+			":" + x.getPort() + request.getContextPath();
+		  %>
+		 <form id="form" name="form" method="post" action="<%=href %>/RegisterServlet">
 			 <h1>Registration</h1>
 			 <p>Please enter the following information</p>
 

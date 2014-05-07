@@ -5,21 +5,22 @@ Author	 : Jamil
 --%>
 <%@page import="java.net.URL"%>
 <%@page import="java.util.List"%>
-<%@page import="com.data.Service.LoginService"%>
+<%@page import="com.data.Service.CompanyService"%>
 <%@page import="java.util.Date"%>
 <%@page import="com.data.Domain.User"%>
+<%@page import="com.data.Domain.Company"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 	 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	 <link rel="stylesheet" type="text/css" href="css/style.css"/>
-	 <title>Home Page</title>	
+	 <link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+	 <title>Company List</title>	
 </head>
 <body>
 <center>
 	 <div id="mystyle">
-		 <h1>Web End Integration</h1>
+		 <h1>Company List</h1>
 		 <%
 		 	URL x = new URL( request.getRequestURL().toString() );
 			String href = x.getProtocol() + "://" + x.getHost() +
@@ -40,25 +41,21 @@ Author	 : Jamil
 		 <table>
 			 <thead>
 				 <tr>
-					 <th>User ID</th>
-					 <th>First Name</th>
-					 <th>Middle Name</th>
-					 <th>Last Name</th>
-					 <th>Email</th>					
+					 <th>Name</th>
+					 <th>Address</th>
+					 <th>Creation Date</th>
 				 </tr>
 			 </thead>
 			 <tbody>
 				 <%
-					 LoginService loginService = new LoginService();
-					 List<User> list = loginService.getListOfUsers();
-					 for (User u : list) {
+					 CompanyService companyService = new CompanyService();
+					 List<Company> list = companyService.getListOfCompanys();
+					 for (Company u : list) {
 				 %>
 				 <tr>
-					 <td><%=u.getUserId()%></td>
-					 <td><%=u.getFirstName()%></td>
-					 <td><%=u.getMiddleName()%></td>
-					 <td><%=u.getLastName()%></td>
-					 <td><%=u.getEmail()%></td>
+					 <td><%=u.getName()%></td>
+					 <td><%=u.getAddress()%></td>
+					 <td><%=u.getCreationDate()%></td>
 				 </tr>
 				 <%}%>
 			 <tbody>
