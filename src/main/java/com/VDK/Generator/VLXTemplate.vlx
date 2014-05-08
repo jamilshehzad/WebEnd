@@ -5,10 +5,10 @@
             <endType tGUID="guid8A586959-9837-47DE-8DBF-BC7031F01545" localName="Person" LNIconFile="adult" kindOf="guid8863CA12-D42B-4b07-8E96-5509EF979920">
                 <imageURI height="32" width="32">VLImages/gifs/new/adult.png</imageURI>
                 <property localName="identityProperty" displayName="identityProperty" pGUID="guidECA4C5F3-4AFB-40EA-9BD6-83C8CE7FF194" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" idType="databaseID" isHidden="true" />
-                <property localName="FirstName" displayName="First Name" pGUID="guid4DE7370B-60E5-4EB0-860E-4066D3DFD7B6" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" baseProperty="guidC4710BC4-4556-4b6f-AD64-1EBF73044B41" />
-                <property localName="LastName" displayName="Last Name" pGUID="guid62B01C18-2E64-46D5-B2FF-3C69B4F76FEB" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" baseProperty="guidC4710BC4-4556-4b6f-AD64-1EBF73044B41" />
+                <property localName="first_name" displayName="First Name" pGUID="guid4DE7370B-60E5-4EB0-860E-4066D3DFD7B6" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" baseProperty="guidC4710BC4-4556-4b6f-AD64-1EBF73044B41" />
+                <property localName="last_name" displayName="Last Name" pGUID="guid62B01C18-2E64-46D5-B2FF-3C69B4F76FEB" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" baseProperty="guidC4710BC4-4556-4b6f-AD64-1EBF73044B41" />
                 <property localName="FullName" displayName="Full Name" pGUID="guidB696CF9C-BF3C-4311-954F-DD809CEB38CC" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" isLabel="true" baseProperty="guidC4710BC4-4556-4b6f-AD64-1EBF73044B41" />
-                <property localName="Sex" displayName="Sex" pGUID="guid7548369B-BA9A-4C4B-AEAD-0CB442EAFA27" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" baseProperty="guid9A224CCF-28F7-4c55-9F14-9E820A0B1631">
+                <!-- <property localName="Sex" displayName="Sex" pGUID="guid7548369B-BA9A-4C4B-AEAD-0CB442EAFA27" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" baseProperty="guid9A224CCF-28F7-4c55-9F14-9E820A0B1631"> 
                     <attribute vlvfDisplayAsGlyph="true" userCanAdd="false" userCanRemove="true" isUser="false">
                         <Symbol URI="VLImages/glyphs/vlv_male_glyph.gif" position="4" shown="false" LNIconFile="yeldot" />
                         <ShowValue>true</ShowValue>
@@ -21,19 +21,19 @@
                         <OnlyShownIfVal>Female</OnlyShownIfVal>
                         <ShowOnChart>true</ShowOnChart>
                     </attribute>
-                </property>
+                </property> -->
             </endType>
             <endType tGUID="guidDB8328BF-3AC1-42A9-B09D-51F4FC93DC42" localName="Company" LNIconFile="organ" kindOf="guidB30A4137-A537-420B-B481-C5DF922152AF">
                 <imageURI height="32" width="32">VLImages/gifs/new/organ.png</imageURI>
                 <property localName="identityProperty" displayName="identityProperty" pGUID="guidECA4C5F3-4AFB-40EA-9BD6-83C8CE7FF194" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" idType="databaseID" isHidden="true" />
-                <property localName="Name" displayName="Name" pGUID="guidB2A3B23C-07B8-4A87-8B45-4CD20079E79C" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" isLabel="true" isPicklistColumn="true" baseProperty="guidC4710BC4-4556-4b6f-AD64-1EBF73044B41" />
-                <property localName="RegistrationNo" displayName="Registration Number" pGUID="guid694EB231-9982-46FE-A40E-3D9165582101" fGUID="guidEF0A742C-097B-4899-B048-3CA75312DB96" baseProperty="guid9A224CCF-28F7-4c55-9F14-9E820A0B1631" />
-                <property localName="LineOfBusiness" displayName="Line Of Business" pGUID="guidB11A89A6-F50C-4c73-949F-00594985DA69" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" baseProperty="guid9A224CCF-28F7-4c55-9F14-9E820A0B1631" />
+                <property localName="name" displayName="Name" pGUID="guidB2A3B23C-07B8-4A87-8B45-4CD20079E79C" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" isLabel="true" isPicklistColumn="true" baseProperty="guidC4710BC4-4556-4b6f-AD64-1EBF73044B41" />
+                <property localName="address" displayName="Address" pGUID="guid694EB231-9982-46FE-A40E-3D9165582101" fGUID="guidEF0A742C-097B-4899-B048-3CA75312DB96" baseProperty="guid9A224CCF-28F7-4c55-9F14-9E820A0B1631" />
+                <property localName="creation_date" displayName="Creation Date" pGUID="guidB11A89A6-F50C-4c73-949F-00594985DA69" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" baseProperty="guid9A224CCF-28F7-4c55-9F14-9E820A0B1631" />
             </endType>
             <endType tGUID="guidC6A2C76F-5637-43DC-92F8-8F3563226307" localName="Address" LNIconFile="place" kindOf="guidCD3DB3DB-55F6-440A-9BB8-3F3EE4DB4D52">
                 <imageURI height="32" width="32">VLImages/gifs/new/place.png</imageURI>
                 <property localName="identityProperty" pGUID="guidECA4C5F3-4AFB-40EA-9BD6-83C8CE7FF194" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" idType="databaseID" isHidden="true" />
-                <property localName="Street" displayName="Street" pGUID="guidF56E1A86-9C0E-4248-96C0-D77D4D16704E" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" isLabel="true" baseProperty="guid9A224CCF-28F7-4c55-9F14-9E820A0B1631" />
+                <!-- <property localName="Street" displayName="Street" pGUID="guidF56E1A86-9C0E-4248-96C0-D77D4D16704E" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" isLabel="true" baseProperty="guid9A224CCF-28F7-4c55-9F14-9E820A0B1631" />
                 <property localName="City" displayName="Town/City" pGUID="guid6D5B39A9-41EC-477D-AA79-4CEF272FF067" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" isLabel="true" baseProperty="guid9A224CCF-28F7-4c55-9F14-9E820A0B1631" />
                 <property localName="State" displayName="County/State" pGUID="guidA29B5F8F-BA18-4262-95BD-65B8216D8841" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" isLabel="true" baseProperty="guid9A224CCF-28F7-4c55-9F14-9E820A0B1631" />
                 <property localName="Country" displayName="Country" pGUID="guidDAC78E2E-4C6F-4006-B291-0A42BAB2E339" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" isLabel="true" baseProperty="guid9A224CCF-28F7-4c55-9F14-9E820A0B1631" />
@@ -45,7 +45,7 @@
                         <OnlyShownIfVal>True</OnlyShownIfVal>
                         <ShowOnChart>true</ShowOnChart>
                     </attribute>
-                </property>
+                </property> -->
             </endType>
         </endTypes>
         <linkTypes>

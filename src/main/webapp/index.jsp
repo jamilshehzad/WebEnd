@@ -251,7 +251,7 @@ function PollEvent()
 						<option value="PERSON">Person</Option>
 						<option value="ADDRESS">Address</Option>
 					</select>  
-					<input name=searchterm size=20 value="Shultz" maxLength="100">
+					<input name=searchterm size=20 value="Sharik" maxLength="100">
 					<input type=submit value=Search id=submit1 name=submit1>
 				</form>
 			</td>

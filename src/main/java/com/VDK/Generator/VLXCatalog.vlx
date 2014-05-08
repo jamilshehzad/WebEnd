@@ -1,0 +1,163 @@
+﻿<vlx:vlx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" service="NewService" xmlns:vlx="http://www.i2group.com/Schemas/2001-12-07/VLXSchema">
+    <appletReturnedData />
+    <typeCatalogue identityProperty="guid5DAED722-7F50-4B00-AF24-931583BA23CB">
+        <endTypes>
+            <endType tGUID="guidA55D364C-849E-4B7F-8D0E-8D8CE76E79FF" localName="Person" displayName="Person" LNIconFile="Adult" kindOf="guid8A586959-9837-47DE-8DBF-BC7031F01545">
+                <imageURI height="32" width="32">VLImages/gifs/new/adult.png</imageURI>
+                <property localName="identityProperty" displayName="ID" pGUID="guid5DAED722-7F50-4B00-AF24-931583BA23CB" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" idType="databaseID" isLabel="true" isVLVFToolTip="true" isHidden="true" />
+                <property localName="first_name" displayName="First Name" pGUID="guid4DE7370B-60E5-4EB0-860E-4066D3DFD7B6" isLabel="true" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" baseProperty="guid6F5BDE02-467B-4fef-8585-F55C13F7B592" />
+                <property localName="last_name" displayName="Last Name" pGUID="guid62B01C18-2E64-46D5-B2FF-3C69B4F76FEB" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" baseProperty="guid6F5BDE02-467B-4fef-8585-F55C13F7B592" />
+                <property localName="birth_date" displayName="Birth Date" pGUID="guidFE45F1C4-B198-4111-8123-F42D2CD6419D" fGUID="guid64F5AC57-CFC5-46fd-A034-D59B496149F2" baseProperty="guidCD68867D-7CEC-46d3-936A-C609292ADF0E" />
+                <property localName="function" displayName="Job Role" pGUID="guidCE86909A-D087-445f-A73D-C79FA9AC9F8C" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" baseProperty="guid9A224CCF-28F7-4c55-9F14-9E820A0B1631" />
+            </endType>
+            <endType tGUID="guid306B3B2A-FE55-4327-99D0-206C2CFDB0F1" localName="Company" LNIconFile="Organ" kindOf="guidDB8328BF-3AC1-42A9-B09D-51F4FC93DC42">
+                <imageURI height="32" width="32">VLImages/gifs/new/organ.png</imageURI>
+                <property localName="identityProperty" displayName="ID" pGUID="guid5DAED722-7F50-4B00-AF24-931583BA23CB" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" idType="databaseID" isVLVFToolTip="true" isHidden="true" />
+                <property localName="name" displayName="Name" pGUID="guidB2A3B23C-07B8-4A87-8B45-4CD20079E79C" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" isLabel="true" baseProperty="guid496E2E84-B7A0-427b-8ACC-985197D06CAC" />
+                <property localName="address" displayName="Address" pGUID="guidDAC78E2E-4C6F-4006-B291-0A42BAB2E339" fGUID="guid4DAD0EE8-5B22-4C72-AEBC-0053D7BBCD06" baseProperty="guid5E4B9174-E288-46c3-989F-B1F895C7DCDE" />
+                <property localName="creation_date" displayName="Creation Date" pGUID="guid9B359855-D9C4-468f-81A2-9DB9C87D32EE" fGUID="guid64F5AC57-CFC5-46fd-A034-D59B496149F2" baseProperty="guidCD68867D-7CEC-46d3-936A-C609292ADF0E" />
+            </endType>
+        </endTypes>
+        <linkTypes>
+            <linkType color="#000000" isSymmetricLink="true" showArrows="true" tGUID="guid2B55231E-521E-4502-8989-3BE1DB0B864D" localName="Is Equivalent To" kindOf="guidC9E54967-BBBF-494B-8348-B9D524F500FD">
+                <property localName="identityProperty" pGUID="guid5DAED722-7F50-4B00-AF24-931583BA23CB" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" idType="databaseID" isHidden="true" />
+            </linkType>
+            <linkType color="#000000" isSymmetricLink="false" showArrows="true" tGUID="guidC807F980-760A-46BD-8F8A-573EFE341378" localName="Is Employee Of" kindOf="guid5154CF48-47CA-4ACB-8BBF-EB920B4A14E3">
+                <property localName="identityProperty" pGUID="guid5DAED722-7F50-4B00-AF24-931583BA23CB" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" idType="databaseID" isHidden="true" />
+                <property localName="function" displayName="Job Role" pGUID="guidCE86909A-D087-445f-A73D-C79FA9AC9F8C" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" baseProperty="guid9A224CCF-28F7-4c55-9F14-9E820A0B1631" />
+                <property localName="last_name" displayName="Last Name" pGUID="guid62B01C18-2E64-46D5-B2FF-3C69B4F76FEB" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" baseProperty="guid6F5BDE02-467B-4fef-8585-F55C13F7B592" />
+            </linkType>
+        </linkTypes>
+        <forms>
+            <form fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593">
+                <FormName>Unformed Text</FormName>
+                <baseForm>text</baseForm>
+            </form>
+            <form fGUID="guid64F5AC57-CFC5-46fd-A034-D59B496149F2">
+                <FormName>Year-Month-Day</FormName>
+                <baseForm>dateTime</baseForm>
+                <formatters>
+                    <formatter syntax=".net">yyyy-MM-dd</formatter>
+                </formatters>
+            </form>
+            <form fGUID="guid4DAD0EE8-5B22-4C72-AEBC-0053D7BBCD06">
+                <FormName>Country - Full Name</FormName>
+                <baseForm>text</baseForm>
+            </form>
+        </forms>
+        <services>
+            <service localName="NewService" sGUID="guid1031E949-0D88-4E96-B590-698D17CDBD16" serviceName="New Service" />
+        </services>
+    </typeCatalogue>
+    <lcx:LibraryCatalogue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" VersionMajor="1" VersionMinor="18" VersionRelease="27" VersionBuild="60" LocaleHex="0409" xmlns:lcx="http://www.i2group.com/Schemas/2001-12-07/LCXSchema">
+        <lcx:Type tGUID="guid3669EC21-8E41-438A-AA1A-26B477C15BE0" abstract="true">
+            <TypeName>Entity</TypeName>
+        </lcx:Type>
+        <lcx:Type tGUID="guid8863CA12-D42B-4b07-8E96-5509EF979920" kindOf="guid3669EC21-8E41-438A-AA1A-26B477C15BE0">
+            <TypeName>Legal Entity</TypeName>
+        </lcx:Type>
+        <lcx:Type tGUID="guidB30A4137-A537-420B-B481-C5DF922152AF" kindOf="guid8863CA12-D42B-4b07-8E96-5509EF979920">
+            <TypeName>Organization</TypeName>
+        </lcx:Type>
+        <lcx:Type tGUID="guidDB8328BF-3AC1-42A9-B09D-51F4FC93DC42" kindOf="guidB30A4137-A537-420B-B481-C5DF922152AF">
+            <TypeName>company</TypeName>
+        </lcx:Type>
+        <lcx:Type tGUID="guid306B3B2A-FE55-4327-99D0-206C2CFDB0F1" kindOf="guidDB8328BF-3AC1-42A9-B09D-51F4FC93DC42">
+            <TypeName>company</TypeName>
+            <Documentation>
+                <lcx:Synonym>Name</lcx:Synonym>
+                <lcx:Synonym>Address</lcx:Synonym>
+                <lcx:Synonym>CreationDate</lcx:Synonym>
+                <Description />
+            </Documentation>
+        </lcx:Type>
+        <lcx:Type tGUID="guid8A586959-9837-47DE-8DBF-BC7031F01545" kindOf="guid8863CA12-D42B-4b07-8E96-5509EF979920">
+            <TypeName>person</TypeName>
+        </lcx:Type>
+        <lcx:Type tGUID="guidA55D364C-849E-4B7F-8D0E-8D8CE76E79FF" kindOf="guid8A586959-9837-47DE-8DBF-BC7031F01545">
+            <TypeName>person</TypeName>
+            <Documentation>
+                <lcx:Synonym>FirstName</lcx:Synonym>
+                <lcx:Synonym>LastName</lcx:Synonym>
+                <lcx:Synonym>BirthDate</lcx:Synonym>
+                <lcx:Synonym>Function</lcx:Synonym>
+                <Description>Person Entity for WebData</Description>
+            </Documentation>
+        </lcx:Type>
+        <lcx:Type tGUID="guidC9E54967-BBBF-494B-8348-B9D524F500FD" isSymmetricLink="true" abstract="true">
+            <TypeName>Link</TypeName>
+        </lcx:Type>
+        <lcx:Type tGUID="guid2B55231E-521E-4502-8989-3BE1DB0B864D" isSymmetricLink="true" kindOf="guidC9E54967-BBBF-494B-8348-B9D524F500FD">
+            <TypeName>Is Equivalent To</TypeName>
+        </lcx:Type>
+        <lcx:Type tGUID="guid5154CF48-47CA-4ACB-8BBF-EB920B4A14E3" isSymmetricLink="true" kindOf="guidC9E54967-BBBF-494B-8348-B9D524F500FD">
+            <TypeName>Organization Link</TypeName>
+        </lcx:Type>
+        <lcx:Type tGUID="guidC807F980-760A-46BD-8F8A-573EFE341378" kindOf="guid5154CF48-47CA-4ACB-8BBF-EB920B4A14E3">
+            <TypeName>Is Employee Of</TypeName>
+        </lcx:Type>
+        <lcx:Property pGUID="guid6684F871-B607-4ffb-80E8-480535CB44FC" abstract="true">
+            <PropertyName>Abstract Date &amp; Time</PropertyName>
+        </lcx:Property>
+        <lcx:Property pGUID="guidCD68867D-7CEC-46d3-936A-C609292ADF0E" baseProperty="guid6684F871-B607-4ffb-80E8-480535CB44FC" abstract="true">
+            <PropertyName>Abstract Date</PropertyName>
+        </lcx:Property>
+        <lcx:Property pGUID="guidFE45F1C4-B198-4111-8123-F42D2CD6419D" baseProperty="guidCD68867D-7CEC-46d3-936A-C609292ADF0E">
+            <PropertyName>Date Of Birth</PropertyName>
+        </lcx:Property>
+        <lcx:Property pGUID="guid9B359855-D9C4-468f-81A2-9DB9C87D32EE" baseProperty="guidCD68867D-7CEC-46d3-936A-C609292ADF0E">
+            <PropertyName>Opened Date</PropertyName>
+        </lcx:Property>
+        <lcx:Property pGUID="guid9A224CCF-28F7-4c55-9F14-9E820A0B1631" abstract="true">
+            <PropertyName>Abstract Text</PropertyName>
+        </lcx:Property>
+        <lcx:Property pGUID="guid5E4B9174-E288-46c3-989F-B1F895C7DCDE" baseProperty="guid9A224CCF-28F7-4c55-9F14-9E820A0B1631" abstract="true">
+            <PropertyName>Address</PropertyName>
+        </lcx:Property>
+        <lcx:Property pGUID="guidDAC78E2E-4C6F-4006-B291-0A42BAB2E339" baseProperty="guid5E4B9174-E288-46c3-989F-B1F895C7DCDE">
+            <PropertyName>Country Name</PropertyName>
+        </lcx:Property>
+        <lcx:Property pGUID="guidC4710BC4-4556-4b6f-AD64-1EBF73044B41" baseProperty="guid9A224CCF-28F7-4c55-9F14-9E820A0B1631">
+            <PropertyName>Generic Name</PropertyName>
+        </lcx:Property>
+        <lcx:Property pGUID="guid496E2E84-B7A0-427b-8ACC-985197D06CAC" baseProperty="guidC4710BC4-4556-4b6f-AD64-1EBF73044B41">
+            <PropertyName>Legal Entity Name</PropertyName>
+        </lcx:Property>
+        <lcx:Property pGUID="guidB2A3B23C-07B8-4A87-8B45-4CD20079E79C" baseProperty="guid496E2E84-B7A0-427b-8ACC-985197D06CAC">
+            <PropertyName>Organization Name</PropertyName>
+        </lcx:Property>
+        <lcx:Property pGUID="guid6F5BDE02-467B-4fef-8585-F55C13F7B592" baseProperty="guid496E2E84-B7A0-427b-8ACC-985197D06CAC" abstract="true">
+            <PropertyName>Person Name</PropertyName>
+        </lcx:Property>
+        <lcx:Property pGUID="guid4DE7370B-60E5-4EB0-860E-4066D3DFD7B6" baseProperty="guid6F5BDE02-467B-4fef-8585-F55C13F7B592">
+            <PropertyName>Person First Name</PropertyName>
+        </lcx:Property>
+        <lcx:Property pGUID="guid62B01C18-2E64-46D5-B2FF-3C69B4F76FEB" baseProperty="guid6F5BDE02-467B-4fef-8585-F55C13F7B592">
+            <PropertyName>Person Last Name</PropertyName>
+        </lcx:Property>
+        <lcx:Property pGUID="guidCE86909A-D087-445f-A73D-C79FA9AC9F8C" baseProperty="guid9A224CCF-28F7-4c55-9F14-9E820A0B1631">
+            <PropertyName>Job Title</PropertyName>
+        </lcx:Property>
+        <lcx:Form fGUID="guid4DAD0EE8-5B22-4C72-AEBC-0053D7BBCD06">
+            <FormName>Country - Full Name</FormName>
+            <baseForm>text</baseForm>
+            <formatters />
+        </lcx:Form>
+        <lcx:Form fGUID="guid64F5AC57-CFC5-46fd-A034-D59B496149F2">
+            <FormName>Year-Month-Day</FormName>
+            <baseForm>dateTime</baseForm>
+            <formatters>
+                <formatter>yyyy-MM-dd</formatter>
+            </formatters>
+        </lcx:Form>
+        <lcx:Form fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593">
+            <FormName>Unformed Text</FormName>
+            <baseForm>text</baseForm>
+            <formatters />
+        </lcx:Form>
+    </lcx:LibraryCatalogue>
+    <content>
+        <ends />
+        <links />
+    </content>
+</vlx:vlx>

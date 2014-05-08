@@ -39,8 +39,9 @@ public class VLXGenerator {
 	 private Node mLinksNode;
 	 
 	 private final String DATABASE_DRIVER = "com.mysql.jdbc.Driver";
-	 private final String DATA_SOURCE_CONNECTION_STRING = "jdbc:mysql://localhost/iXvSampleData";
-	 private final String VLX_TYPE_CATALOG = "VLXTemplate.vlx";
+	 private final String DATA_SOURCE_CONNECTION_STRING = "jdbc:mysql://localhost/webdata";
+	 //private final String DATA_SOURCE_CONNECTION_STRING = "jdbc:mysql://localhost/ixvsampledata";
+	 private final String VLX_TYPE_CATALOG = "VLXCatalog.vlx";
 	 private final String VLX_ERROR_TEMPLATE = "VLXErrorTemplate.vlx";
 	 private final String ID_FILLER = "IDfiller.xslt";
 	 private final String USER = "root";
@@ -239,10 +240,10 @@ public class VLXGenerator {
 			
 			// SUBSIDARIES
 			// Search for the subsidiaries of this company
-			queryString = "SELECT DISTINCT Person.PersonID as identityProperty, Person.FirstName, Person.LastName,"+
-			    "CONCAT(FirstName,' ',LastName) AS FullName, Person.Sex, EMPLOYEELINK.Role, EMPLOYEELINK.EmployeeNo " +
-			    "FROM Person INNER JOIN EMPLOYEELINK ON Person.PersonID = EMPLOYEELINK.PersonID " +
-			    "WHERE EMPLOYEELINK.OrganizationID='" + expandID + "'";
+			queryString = "SELECT DISTINCT person.id as identityProperty, person.first_name, person.last_name,"+
+			    "CONCAT(first_name,' ',last_name) AS FullName, person.function " +
+			    "FROM person INNER JOIN company ON person.id = company.person_id " +
+			    "WHERE company.id='" + expandID + "'";
 			
 			//Given SQL queries for ends and associated links execute the queries 
 			//and populate the VLX document with the data returned
@@ -252,26 +253,24 @@ public class VLXGenerator {
 			// Get all fields from the database as defined by the Type Catalog for the Person type, including the link:
 			// Person type properties: [identityProperty, FirstName, LastName, FullName, Sex]
 			// Has Shareholding Of type properties: [NoOfShares]
-			queryString = "SELECT DISTINCT Person.PersonID as identityProperty, Person.FirstName, Person.LastName,"+
+			/*queryString = "SELECT DISTINCT Person.PersonID as identityProperty, Person.FirstName, Person.LastName,"+
 				"CONCAT(FirstName,' ',LastName) AS FullName, Person.Sex, SHAREHOLDERLINK.NumberOfShares as NoOfShares " +
 				"FROM Person INNER JOIN SHAREHOLDERLINK ON Person.PersonID = SHAREHOLDERLINK.PersonID " +
 				"WHERE SHAREHOLDERLINK.OrganizationID='" + expandID + "'";
 			        
-			domVLX = processExpand(expandID, "Person", "Company", "Has Shareholding Of", queryString, domVLX, 5, "reverse");
+			domVLX = processExpand(expandID, "Person", "Company", "Has Shareholding Of", queryString, domVLX, 5, "reverse");*/
 		
 			
 			// Search for the adresses this company has
 			// Get all fields from the database as defined by the Type Catalog for the Address type, including the link:
 			// Address type properties: [identityProperty, Street, City, State, Country, IsPOBox]
 			// Has Address Of type properties: [IsRegisteredAddress]
-			queryString = "SELECT `Postal Address`.POID as identityProperty, `Postal Address`.Street," +
-			    "`Postal Address`.`Town/City` as City, `Postal Address`.`State/County` as State," +
-			    "`Postal Address`.Country, `Postal Address`.PO_Box as IsPOBox, ADDRESSLINK.RegAddress as IsRegisteredAddress " +
-				"FROM `Postal Address` INNER JOIN ADDRESSLINK ON `Postal Address`.POID = ADDRESSLINK.POID " +
-				"WHERE ADDRESSLINK.ResidentID='" + expandID + "'";
+			/*queryString = "SELECT company.address as identityProperty " +
+				"FROM company "+
+				"WHERE company.id='" + expandID + "'";
 			
 		
-			domVLX = processExpand(expandID, "Address", "Company", "Has Address Of", queryString, domVLX, 6, "forward");
+			domVLX = processExpand(expandID, "Address", "Company", "Has Address Of", queryString, domVLX, 6, "forward");*/
 			
 		}
 		catch(Exception e){
@@ -415,23 +414,21 @@ public class VLXGenerator {
 	    if (strType.equals("COMPANY")){
 	        // Get all fields from the database as defined by the Type Catalog
 			// Company type properties: [identityProperty, Name, RegistrationNo, LineOfBusiness]
-	        queryString = "SELECT OrganizationID as identityProperty, Name, RegistrationNo, Trade as LineOfBusiness " +
-				"FROM Organization where Name like '%" + searchTerm + "%'";
+	        queryString = "SELECT id as identityProperty, name, address, creation_date " +
+				"FROM company where name like '%" + searchTerm + "%'";
 			typeId = "Company";
 	    }
 	    else if (strType.equals("PERSON")){
 	        // Get all fields from the database as defined by the Type Catalog
 			// Person type properties: [identityProperty, FirstName, LastName, FullName, Sex]
-			queryString = "SELECT PersonID as identityProperty, FirstName, LastName, CONCAT(FirstName, ' ', LastName) as FullName, Sex " +
-				"FROM Person where CONCAT(FirstName, ' ', LastName) like '%" + searchTerm + "%'";
+			queryString = "SELECT id as identityProperty, first_name, last_name " +
+				"FROM person where CONCAT(first_name, ' ', last_name) like '%" + searchTerm + "%'";
 			typeId = "Person";
 	    }
 	    else if (strType.equals("ADDRESS")){
 	        // Get all fields from the database as defined by the Type Catalog
 			// Address type properties: [identityProperty, City, State, Country, IsPOBox]
-			queryString = "SELECT POID as identityProperty, Street, `Town/City` as City,"+
-			    "`State/County` as State, Country, `PO_Box` as IsPOBox " +
-				"FROM `Postal Address` where Street like '%" + searchTerm + "%'";
+			queryString = "SELECT address as identityProperty FROM company where address like '%" + searchTerm + "%'";
 			typeId = "Address";
 	    }
 	    else{
@@ -597,6 +594,7 @@ public class VLXGenerator {
 			mLastError = "Error serializing VLX document: "+e.getMessage();
 			return null;
 		}
+		 System.out.println(resultStringWriter.toString());
 		return resultStringWriter.toString();
 	}
 }
