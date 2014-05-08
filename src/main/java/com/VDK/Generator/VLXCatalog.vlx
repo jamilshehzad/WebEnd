@@ -19,12 +19,14 @@
             </endType>
         </endTypes>
         <linkTypes>
-            <linkType color="#000000" isSymmetricLink="true" showArrows="true" tGUID="guid2B55231E-521E-4502-8989-3BE1DB0B864D" localName="Is Equivalent To" kindOf="guidC9E54967-BBBF-494B-8348-B9D524F500FD">
+            <linkType color="#000000" isSymmetricLink="true" showArrows="true" tGUID="guid2B55231E-521E-4502-8989-3BE1DB0B864D" localName="Has Function" kindOf="guidC9E54967-BBBF-494B-8348-B9D524F500FD">
                 <property localName="identityProperty" pGUID="guid5DAED722-7F50-4B00-AF24-931583BA23CB" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" idType="databaseID" isHidden="true" />
+                <property localName="function" displayName="Job Role" pGUID="guidCE86909A-D087-445f-A73D-C79FA9AC9F8C" isLabel="true" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" baseProperty="guid9A224CCF-28F7-4c55-9F14-9E820A0B1631" />
+                <property localName="name" displayName="Company Name" pGUID="guid62B01C18-2E64-46D5-B2FF-3C69B4F76FEB" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" baseProperty="guid6F5BDE02-467B-4fef-8585-F55C13F7B592" />
             </linkType>
             <linkType color="#000000" isSymmetricLink="false" showArrows="true" tGUID="guidC807F980-760A-46BD-8F8A-573EFE341378" localName="Is Employee Of" kindOf="guid5154CF48-47CA-4ACB-8BBF-EB920B4A14E3">
                 <property localName="identityProperty" pGUID="guid5DAED722-7F50-4B00-AF24-931583BA23CB" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" idType="databaseID" isHidden="true" />
-                <property localName="function" displayName="Job Role" pGUID="guidCE86909A-D087-445f-A73D-C79FA9AC9F8C" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" baseProperty="guid9A224CCF-28F7-4c55-9F14-9E820A0B1631" />
+                <property localName="function" displayName="Job Role" pGUID="guidCE86909A-D087-445f-A73D-C79FA9AC9F8C" isLabel="true" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" baseProperty="guid9A224CCF-28F7-4c55-9F14-9E820A0B1631" />
                 <property localName="last_name" displayName="Last Name" pGUID="guid62B01C18-2E64-46D5-B2FF-3C69B4F76FEB" fGUID="guidFDEED4A3-619E-45DE-AF1A-2A4108EF9593" baseProperty="guid6F5BDE02-467B-4fef-8585-F55C13F7B592" />
             </linkType>
         </linkTypes>

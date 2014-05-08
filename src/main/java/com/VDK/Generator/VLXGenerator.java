@@ -137,36 +137,36 @@ public class VLXGenerator {
 			// Get all fields from the database as defined by the Type Catalog for the Company type, including the link:
 			// Company type properties: [identityProperty, Name, RegistrationNo, LineOfBusiness]
 			// Has Shareholding Of type properties: [NoOfShares]
-			queryString = "SELECT DISTINCT Organization.OrganizationID as identityProperty, Organization.Name, "+
-			    "Organization.RegistrationNo, Organization.Trade as LineOfBusiness, SHAREHOLDERLINK.NumberOfShares as NoOfShares " +
-				"FROM SHAREHOLDERLINK INNER JOIN Organization ON " +
-				"SHAREHOLDERLINK.OrganizationID = Organization.OrganizationID " +
-				"WHERE SHAREHOLDERLINK.PersonID='" + expandID + "'";
+			queryString = "SELECT DISTINCT company.id as identityProperty, company.name as name, company.address as address,company.creation_date as creation_date, person.first_name, person.last_name, person.function "+
+				"FROM person INNER JOIN company ON " +
+				"company.person_id = person.id " +
+				"WHERE person.id='" + expandID + "'";
 			    
-			domVLX = processExpand(expandID, "Company", "Person", "Has Shareholding Of", queryString, domVLX, 4, "forward");
+			//domVLX = processExpand(expandID, "Company", "Person", "Has Shareholding Of", queryString, domVLX, 4, "forward");
 			
 			// Search for the companies this person is an employee of
 			// Get all fields from the database as defined by the Type Catalog for the Company type, including the link:
 			// Company type properties: [identityProperty, Name, RegistrationNo, LineOfBusiness]
 			// Is Employee Of type properties: [Role, EmployeeNo]
-			queryString = "SELECT DISTINCT Organization.OrganizationID as identityProperty, Organization.Name, "+
+			/*queryString = "SELECT DISTINCT Organization.OrganizationID as identityProperty, Organization.Name, "+
 			    "Organization.RegistrationNo, Organization.Trade as LineOfBusiness, EMPLOYEELINK.Role, EMPLOYEELINK.EmployeeNo " +
 				"FROM Organization INNER JOIN EMPLOYEELINK ON Organization.OrganizationID = EMPLOYEELINK.OrganizationID " +
-				"WHERE EMPLOYEELINK.PersonID='" + expandID + "'";
+				"WHERE EMPLOYEELINK.PersonID='" + expandID + "'";*/
 			       
 			domVLX = processExpand(expandID, "Company", "Person", "Is Employee Of", queryString, domVLX, 4, "forward");
+			return domVLX;
    
 			// Search for the adresses this person has
 			// Get all fields from the database as defined by the Type Catalog for the Address type, including the link:
 			// Address type properties: [identityProperty, Street, City, State, Country, IsPOBox]
 			// Has Address Of type properties: [IsRegisteredAddress]
-			queryString = "SELECT DISTINCT `Postal Address`.POID as identityProperty, `Postal Address`.Street, "+
+			/*queryString = "SELECT DISTINCT `Postal Address`.POID as identityProperty, `Postal Address`.Street, "+
 			    "`Postal Address`.`Town/City` as City, `Postal Address`.`State/County` as State, "+
 			    "`Postal Address`.Country, `Postal Address`.`PO_Box` as IsPOBox, ADDRESSLINK.RegAddress as IsRegisteredAddress " +
 				"FROM `Postal Address` INNER JOIN ADDRESSLINK ON `Postal Address`.POID = ADDRESSLINK.POID " +
 				"WHERE ADDRESSLINK.ResidentID='" + expandID + "'";
 			           
-			return processExpand(expandID, "Address", "Person", "Has Address Of", queryString, domVLX, 6, "forward");			
+			return processExpand(expandID, "Address", "Person", "Has Address Of", queryString, domVLX, 6, "forward");		*/	
 		}
 		catch(Exception e)
 		{
@@ -518,8 +518,13 @@ public class VLXGenerator {
 		for(int i = 1; i <= entityFields; i++)
 		{
 			ResultSetMetaData rsMetaData = rs.getMetaData();
-		    fieldName = rsMetaData.getColumnLabel(i);
-		    String propValue = rs.getString(i);
+			String propValue = null;
+		    try{
+				fieldName = rsMetaData.getColumnLabel(i);
+			    propValue = rs.getString(i);
+		    }catch(Exception e){
+		    	return;
+		    }
 		    
 			// don't add the property if the field value is null
 			if (propValue!=null){

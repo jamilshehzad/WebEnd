@@ -31,7 +31,7 @@ if(userAgent.indexOf("MSIE")!=-1)
 <script language="JavaScript" src="scripts/events.js"></script>
 <script language="JavaScript" src="scripts/filters.js"></script>
 <script language="JavaScript" src="scripts/showProperties.js"></script>
-<%if(null != session && null != session.getAttribute("user")){ %>
+
 <SCRIPT LANGUAGE="JavaScript">
 <!--
 var arrSelEnds, arrSelLinks; //Holds the IDs of the most recently right clicked items.
@@ -366,10 +366,6 @@ function PollEvent()
 	<form style="visibility:hidden;background:white" name="frmCopy"> <!-- This form used for copying data to clipboard -->
 		<input type="hidden" name="clipCopy">
 	</form>
-<%}else{ %>	
-			<b>This page is not authorized for you to view. Please login.</b>		
-			 <br/>
-			 <a href="login.jsp">Login</a>
-		 <%} %>
+
 </BODY>
 </HTML>
