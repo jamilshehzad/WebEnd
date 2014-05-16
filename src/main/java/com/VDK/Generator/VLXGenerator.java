@@ -296,7 +296,7 @@ public class VLXGenerator {
 		while (rs.next()) {
 		    addEntity(rs, entityType1, domVLX, entityFields);
 			addLink(rs, expandID.trim(), rs.getString(1).trim(), linkType, linkDirection, domVLX, entityFields);	
-			addLink(rs, expandID.trim(), rs.getString(1).trim(), linkType, linkDirection, domVLX, entityFields);		
+			addLink(rs, expandID.trim(), rs.getString(1).trim(), "Has Function", linkDirection, domVLX, entityFields);		
 		}
 		stmt.close();
 		conn.close();
@@ -350,7 +350,7 @@ public class VLXGenerator {
 		
 		id = domVLX.createAttribute("id");
 		linkNode.getAttributes().setNamedItem(id);
-		id.setNodeValue(UUID.randomUUID().toString());
+		id.setNodeValue("id-"+end1Id+"-"+end2Id+"-"+catType);
 		
 		end1IdNode1 = domVLX.createAttribute("end1id");
 		linkNode.getAttributes().setNamedItem(end1IdNode1);
@@ -622,7 +622,17 @@ public class VLXGenerator {
 		}
 		 System.out.println(resultStringWriter.toString());
 		 String val = resultStringWriter.toString();
+		 
 		return val;
+	}
+	
+	public String parseValue(String value){
+		StringBuffer val = new StringBuffer(value);
+		
+		String origVal = val.substring(0,val.indexOf("<links>"));
+		String linksVal = val.substring(val.indexOf("<links>"),val.indexOf("</links>"));
+		
+		return val.toString();
 	}
 }
 
