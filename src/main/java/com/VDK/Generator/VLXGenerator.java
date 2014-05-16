@@ -2,6 +2,8 @@ package com.VDK.Generator;
 
 import java.net.URL;
 import java.sql.*;
+import java.util.UUID;
+
 import javax.xml.parsers.DocumentBuilder; 
 import javax.xml.parsers.DocumentBuilderFactory;   
 import javax.xml.parsers.ParserConfigurationException;
@@ -108,7 +110,7 @@ public class VLXGenerator {
 		}
     		
 		try{
-			domVLX = (Document) runTransform(domVLX, "IDfiller.xslt");
+			//domVLX = (Document) runTransform(domVLX, "IDfiller.xslt");
 		}
 		catch(Exception e){
 			mLastError = "failure whilst running IDfiller transform";
@@ -293,9 +295,9 @@ public class VLXGenerator {
 	
 		while (rs.next()) {
 		    addEntity(rs, entityType1, domVLX, entityFields);
+			addLink(rs, expandID.trim(), rs.getString(1).trim(), linkType, linkDirection, domVLX, entityFields);	
 			addLink(rs, expandID.trim(), rs.getString(1).trim(), linkType, linkDirection, domVLX, entityFields);		
 		}
-		
 		stmt.close();
 		conn.close();
 		return domVLX;
@@ -324,6 +326,8 @@ public class VLXGenerator {
 		Node directionNode;
 		Node catTypeNode;
 		String fieldName;
+		Node id;
+		Node end1IdNode1, end2IdNode2;
 		
 		//Create a new <link> node and add it as a child of <links>
 		linkNode = mLinksNode.appendChild(domVLX.createElement("link"));
@@ -343,6 +347,18 @@ public class VLXGenerator {
 		catTypeNode = domVLX.createAttribute("catType");
 		linkNode.getAttributes().setNamedItem(catTypeNode);
 		catTypeNode.setNodeValue(catType);
+		
+		id = domVLX.createAttribute("id");
+		linkNode.getAttributes().setNamedItem(id);
+		id.setNodeValue(UUID.randomUUID().toString());
+		
+		end1IdNode1 = domVLX.createAttribute("end1id");
+		linkNode.getAttributes().setNamedItem(end1IdNode1);
+		end1IdNode1.setNodeValue("id-"+end1Id);
+	    
+		end2IdNode2 = domVLX.createAttribute("end2id");
+		linkNode.getAttributes().setNamedItem(end2IdNode2);
+		end2IdNode2.setNodeValue("id-"+end2Id);
 	    
 		//create a <properties> element as a child on the link element
 		propertiesNode  = linkNode.appendChild(domVLX.createElement("properties"));
@@ -451,7 +467,7 @@ public class VLXGenerator {
 			stmt.close();
 			conn.close();
 			//Run IDFiller
-			domVLX = (Document) runTransform(domVLX, ID_FILLER);
+			//domVLX = (Document) runTransform(domVLX, ID_FILLER);
 		} catch (Exception e) {
 			mLastError = "Error occured in search(...): "+e.getMessage();
 			return null;
@@ -493,6 +509,7 @@ public class VLXGenerator {
 	    Node yPosNode;
 	    Node catTypeNode;
 		String fieldName;
+		Node id;
 
 		endNode = mEndsNode.appendChild(domVLX.createElement("end"));
 			
@@ -508,6 +525,10 @@ public class VLXGenerator {
 		xPosNode = domVLX.createAttribute("xPos");
 		endNode.getAttributes().setNamedItem(xPosNode);
 		xPosNode.setNodeValue("0");
+		
+		id = domVLX.createAttribute("id");
+		endNode.getAttributes().setNamedItem(id);
+		id.setNodeValue("id-"+rs.getString("identityProperty"));
     
 		propertiesNode = endNode.appendChild(domVLX.createElement("properties"));
         
@@ -600,7 +621,8 @@ public class VLXGenerator {
 			return null;
 		}
 		 System.out.println(resultStringWriter.toString());
-		return resultStringWriter.toString();
+		 String val = resultStringWriter.toString();
+		return val;
 	}
 }
 
