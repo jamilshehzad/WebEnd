@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -46,17 +48,23 @@ public class VLXGenerator {
 	 private Node mEndsNode;
 	 private Node mLinksNode;
 	 
-	 private final String DATABASE_DRIVER = "com.mysql.jdbc.Driver";
-	 private final String DATA_SOURCE_CONNECTION_STRING = "jdbc:mysql://localhost/webdata";
+	 /*private final String DATABASE_DRIVER = "com.mysql.jdbc.Driver";
+	 private final String DATA_SOURCE_CONNECTION_STRING = "jdbc:mysql://localhost/ixvdata";
 	 //private final String DATA_SOURCE_CONNECTION_STRING = "jdbc:mysql://localhost/ixvsampledata";
-	 private final String VLX_TYPE_CATALOG = "VLXCatalog.vlx";
+	 private final String VLX_TYPE_CATALOG = "VLXTemplate.vlx";
 	 private final String VLX_ERROR_TEMPLATE = "VLXErrorTemplate.vlx";
 	 private final String ID_FILLER = "IDfiller.xslt";
 	 private final String USER = "root";
-	 private final String PASS = "root";
+	 private final String PASS = "root";*/
 	   
 	 DocumentBuilder mBuilder=null;
 	 private String mLastError="";
+	 
+	 private final String DATABASE_DRIVER = "mongodb.jdbc.MongoDriver";
+	 private final String DATA_SOURCE_CONNECTION_STRING = "jdbc:mongo://localhost:8444/meteor";
+	 private final String VLX_TYPE_CATALOG = "VLXTemplate.vlx";
+	 private final String VLX_ERROR_TEMPLATE = "VLXErrorTemplate.vlx";
+	 private final String ID_FILLER = "IDfiller.xslt";
 	    
 	 public VLXGenerator() {}
 	   
@@ -76,239 +84,60 @@ public class VLXGenerator {
 	 * @return true if we connect to the database successfully 
 	 */
 	public Connection connectDatabase() throws Exception{
-		System.out.println("Connecting to database: "+DATA_SOURCE_CONNECTION_STRING+":"+USER+":"+PASS);
 	 	Class.forName(DATABASE_DRIVER).newInstance();
-		return DriverManager.getConnection(DATA_SOURCE_CONNECTION_STRING,USER,PASS);
+		/*return DriverManager.getConnection(DATA_SOURCE_CONNECTION_STRING,USER,PASS);*/
+	 	return DriverManager.getConnection(DATA_SOURCE_CONNECTION_STRING);
    }
       
-	/**
-	 * Each expand will request information from specific expand methods
-	 * before the function returns the expanded ID is added as an attribute of the content element
-	 *
-	 * @param strType - the type of expand; either COMPANY, PERSON OR PRODUCT
-	 * @param strId - the database ID to expand from; could be company.ID, person.ID, product.ID etc.
-	 * @return new VLX DOM document with expanded ends relationships
-	 */
-	public String expand(String expandType, String expandID){
-   	  
-		Document domVLX = null;
-		domVLX = loadVLXTemplate(VLX_TYPE_CATALOG);
-		initNodes(domVLX);			
-		if(domVLX==null)
-			return null;
-		expandType = expandType.toUpperCase();
-	
-		//Perform different queries based on the type that is being expanded
-		if(expandType.equals("COMPANY"))
-		        domVLX = expandCompany(expandID, domVLX);
-		else if(expandType.equals("PERSON"))
-		        domVLX = expandPerson(expandID, domVLX);
-		else if(expandType.equals("ADDRESS"))
-		    	domVLX = expandAddress(expandID, domVLX);
-		else{
-			mLastError = "Unrecognized expand type: " + expandType;
-			return null;
-		}
-	   
-		if(domVLX==null){
-			mLastError = "Error occured whilst expanding type "+expandType+" - "+mLastError;
-			return null;
-		}
-    		
-		try{
-			//domVLX = (Document) runTransform(domVLX, "IDfiller.xslt");
-		}
-		catch(Exception e){
-			mLastError = "failure whilst running IDfiller transform";
-			return null;
-		}
-		return XMLDOM2String(domVLX);
-	}
-	   		
-	/**
-	 * Given the id of the person this function performs SQL queries to get
-	 * related information which is in this case only companies that they are
-	 * directors of.  It also generates the link between the person and company
-	 * based on another SQL query.
-	 * 
-	 * @param strID id of end to expand
-	 * @param domVLX VLX template loaded into a DOM Document
-	 * @return updated VLX DOM document
-	 */
-	private Document expandPerson(String expandID, Document domVLX){
-
-	    String queryString = "";
-
-		try
-		{
-			// Search for the companies this person is a shareholder of
-			// Get all fields from the database as defined by the Type Catalog for the Company type, including the link:
-			// Company type properties: [identityProperty, Name, RegistrationNo, LineOfBusiness]
-			// Has Shareholding Of type properties: [NoOfShares]
-			queryString = "SELECT DISTINCT company.id as identityProperty, company.name as name, company.address as address,company.creation_date as creation_date, person.first_name, person.last_name, person.function "+
-				"FROM person INNER JOIN company ON " +
-				"company.person_id = person.id " +
-				"WHERE person.id='" + expandID + "'";
-			    
-			//domVLX = processExpand(expandID, "Company", "Person", "Has Shareholding Of", queryString, domVLX, 4, "forward");
-			
-			// Search for the companies this person is an employee of
-			// Get all fields from the database as defined by the Type Catalog for the Company type, including the link:
-			// Company type properties: [identityProperty, Name, RegistrationNo, LineOfBusiness]
-			// Is Employee Of type properties: [Role, EmployeeNo]
-			/*queryString = "SELECT DISTINCT Organization.OrganizationID as identityProperty, Organization.Name, "+
-			    "Organization.RegistrationNo, Organization.Trade as LineOfBusiness, EMPLOYEELINK.Role, EMPLOYEELINK.EmployeeNo " +
-				"FROM Organization INNER JOIN EMPLOYEELINK ON Organization.OrganizationID = EMPLOYEELINK.OrganizationID " +
-				"WHERE EMPLOYEELINK.PersonID='" + expandID + "'";*/
-			       
-			domVLX = processExpand(expandID, "Company", "Person", "Is Employee Of", queryString, domVLX, 4, "forward");
-			return domVLX;
-   
-			// Search for the adresses this person has
-			// Get all fields from the database as defined by the Type Catalog for the Address type, including the link:
-			// Address type properties: [identityProperty, Street, City, State, Country, IsPOBox]
-			// Has Address Of type properties: [IsRegisteredAddress]
-			/*queryString = "SELECT DISTINCT `Postal Address`.POID as identityProperty, `Postal Address`.Street, "+
-			    "`Postal Address`.`Town/City` as City, `Postal Address`.`State/County` as State, "+
-			    "`Postal Address`.Country, `Postal Address`.`PO_Box` as IsPOBox, ADDRESSLINK.RegAddress as IsRegisteredAddress " +
-				"FROM `Postal Address` INNER JOIN ADDRESSLINK ON `Postal Address`.POID = ADDRESSLINK.POID " +
-				"WHERE ADDRESSLINK.ResidentID='" + expandID + "'";
-			           
-			return processExpand(expandID, "Address", "Person", "Has Address Of", queryString, domVLX, 6, "forward");		*/	
-		}
-		catch(Exception e)
-		{
-			mLastError = "Error occured while expanding person with id " + expandID + " - " + e.getMessage();
-			return null;
-		}
-	}
-		
-	/**
-	 * Given the id of the product this function performs SQL queries to get
-	 * related information which is in this case only companies that products
-	 * are associated with.
-	 * 
-	 * @param strID id of end to expand
-	 * @param domVLX VLX template loaded into a DOM Document
-	 * @return updated VLX DOM document
-	 */
-	private Document expandAddress(String expandID, Document domVLX){
-		
-	    String queryString;
-	    
-		try
-		{
-			// Search for the companies with address
-			// Get all fields from the database as defined by the Type Catalog for the Company type, including the link:
-			// Company type properties: [identityProperty, Name, RegistrationNo, LineOfBusiness]
-			// Has Address Of type properties: [IsRegisteredAddress]
-			queryString = "SELECT DISTINCT Organization.OrganizationID as identityProperty, Organization.Name, Organization.RegistrationNo, Organization.Trade as LineOfBusiness, ADDRESSLINK.RegAddress as IsRegisteredAddress " +
-				"FROM ADDRESSLINK INNER JOIN Organization ON " +
-				"ADDRESSLINK.ResidentID = Organization.OrganizationID " +
-				"WHERE ADDRESSLINK.POID='" + expandID + "'";
-				    
-			domVLX = processExpand(expandID, "Company", "Address", "Has Address Of", queryString, domVLX, 4, "reverse");
-			
-			// Search for the people with this address
-			// Get all fields from the database as defined by the Type Catalog for the Person type, including the link:
-			// Person type properties: [identityProperty, FirstName, LastName, FullName, Sex]
-			// Has Address Of type properties: [IsRegisteredAddress]
-			queryString = "SELECT DISTINCT Person.PersonID as identityProperty, Person.FirstName, Person.LastName, "+
-			    "CONCAT(FirstName,' ',LastName) AS FullName, Person.Sex, ADDRESSLINK.RegAddress as IsRegisteredAddress " +
-				"FROM Person INNER JOIN ADDRESSLINK ON Person.PersonID = ADDRESSLINK.ResidentID " +
-				"WHERE ADDRESSLINK.POID='" + expandID + "'";
-				        
-			return processExpand(expandID, "Person", "Address", "Has Address Of", queryString, domVLX, 5, "reverse");
-			
-		}
-		catch(Exception e)
-		{
-			mLastError = "Error occured while expanding address with id " + expandID + " - " + e.getMessage();
-			return null;
-		}
-	}
-	
-	/**
-	 * Expand the items related to a company.  This will display the other companies
-	 * (though shareholder, subsidiary or competitor relationships), people, products,
-	 * documents, news, events, websites and sic codes associated with the company
-	 * identified by the strID.
-	 * 
-	 * @param strID - Id of company to expand
-	 * @param domVLX - VLX XML DOM document
-	 * @return - Updated VLX XML DOM document
-	 * 
-	 */
-	
-	private Document expandCompany(String expandID, Document domVLX){
-		
-		String queryString;
-		
-		try{
-			
-			// SUBSIDARIES
-			// Search for the subsidiaries of this company
-			queryString = "SELECT DISTINCT person.id as identityProperty, person.first_name, person.last_name,"+
-			    "CONCAT(first_name,' ',last_name) AS FullName, person.function " +
-			    "FROM person INNER JOIN company ON person.id = company.person_id " +
-			    "WHERE company.id='" + expandID + "'";
-			
-			//Given SQL queries for ends and associated links execute the queries 
-			//and populate the VLX document with the data returned
-			domVLX = processExpand(expandID, "Person", "Company", "Is Employee Of", queryString, domVLX, 5, "reverse");
-			          
-			// Search for shareholders of this company
-			// Get all fields from the database as defined by the Type Catalog for the Person type, including the link:
-			// Person type properties: [identityProperty, FirstName, LastName, FullName, Sex]
-			// Has Shareholding Of type properties: [NoOfShares]
-			/*queryString = "SELECT DISTINCT Person.PersonID as identityProperty, Person.FirstName, Person.LastName,"+
-				"CONCAT(FirstName,' ',LastName) AS FullName, Person.Sex, SHAREHOLDERLINK.NumberOfShares as NoOfShares " +
-				"FROM Person INNER JOIN SHAREHOLDERLINK ON Person.PersonID = SHAREHOLDERLINK.PersonID " +
-				"WHERE SHAREHOLDERLINK.OrganizationID='" + expandID + "'";
-			        
-			domVLX = processExpand(expandID, "Person", "Company", "Has Shareholding Of", queryString, domVLX, 5, "reverse");*/
-		
-			
-			// Search for the adresses this company has
-			// Get all fields from the database as defined by the Type Catalog for the Address type, including the link:
-			// Address type properties: [identityProperty, Street, City, State, Country, IsPOBox]
-			// Has Address Of type properties: [IsRegisteredAddress]
-			/*queryString = "SELECT company.address as identityProperty " +
-				"FROM company "+
-				"WHERE company.id='" + expandID + "'";
-			
-		
-			domVLX = processExpand(expandID, "Address", "Company", "Has Address Of", queryString, domVLX, 6, "forward");*/
-			
-		}
-		catch(Exception e){
-		    mLastError = "Error occured while expanding company with id " + expandID + " - " + e.getMessage();
-			return null;
-		}
-		return domVLX;
-	}
-	
-	private Document processExpand(String expandID, String entityType1, String entityType2, String linkType,
-			String queryString, Document domVLX, int entityFields, String linkDirection) throws Exception
+	private void addEntity(ResultSet rs, String catType, Document domVLX, int entityFields) throws SQLException
 	{
-	    Connection conn = connectDatabase();
-		Statement stmt = conn.createStatement();
-		ResultSet rs = null;
-			
-		// If an SQL query was specified execute the query and
-		// populate the rs ResultSet with the results
-		rs = stmt.executeQuery(queryString);
-	
-		while (rs.next()) {
-		    addEntity(rs, entityType1, domVLX, entityFields);
-			addLink(rs, expandID.trim(), rs.getString(1).trim(), linkType, linkDirection, domVLX, entityFields);	
-			addLink(rs, expandID.trim(), rs.getString(1).trim(), "Has Function", linkDirection, domVLX, entityFields);		
-		}
-		stmt.close();
-		conn.close();
-		return domVLX;
-	}
+	    Node endNode;
+	    Node propertiesNode;
+	    Node xPosNode;
+	    Node yPosNode;
+	    Node catTypeNode;
+		String fieldName;
+		Node id;
 
+		endNode = mEndsNode.appendChild(domVLX.createElement("end"));
+			
+		// Set the catType
+		catTypeNode = domVLX.createAttribute("catType");
+		endNode.getAttributes().setNamedItem(catTypeNode);
+		catTypeNode.setNodeValue(catType);
+		// Set the ypos - just "0"
+		yPosNode = domVLX.createAttribute("yPos");
+		endNode.getAttributes().setNamedItem(yPosNode);
+		yPosNode.setNodeValue("0");
+		// Set the xpos - just "0"
+		xPosNode = domVLX.createAttribute("xPos");
+		endNode.getAttributes().setNamedItem(xPosNode);
+		xPosNode.setNodeValue("0");
+		
+		id = domVLX.createAttribute("id");
+		endNode.getAttributes().setNamedItem(id);
+		id.setNodeValue("id-"+rs.getString("identityProperty"));
+    
+		propertiesNode = endNode.appendChild(domVLX.createElement("properties"));
+        
+		// loop through the fields (properties), creating them as elements (using the record field name as the element
+		// name) and append them as a child of 'properties'. Set their value to the record value.
+		
+		//entityFields = rs.getMetaData().getColumnCount();
+		for(int i = 1; i <= entityFields; i++)
+		{
+			ResultSetMetaData rsMetaData = rs.getMetaData();
+		    fieldName = rsMetaData.getColumnLabel(i);
+		    String propValue = rs.getString(i);
+		    
+			// don't add the property if the field value is null
+			if (propValue!=null){
+				Node propNode = propertiesNode.appendChild(domVLX.createElement(fieldName));
+				Node textNode = domVLX.createTextNode(propValue);
+				propNode.appendChild(textNode);
+			}
+		}
+	}
        
    /**
 	 * Given a Vector of VLXProperty objects this function generates the link 
@@ -322,7 +151,7 @@ public class VLXGenerator {
 	 * @param vlxProps Vector of VLXProperty objects to be sued to populate the links properties element
 	 **/
 	private void addLink(ResultSet rs, String end1Id, String end2Id, String catType, String direction, 
-			Document domVLX, int entityFields) throws SQLException {
+			Document domVLX, int entityFields, String status) throws SQLException {
 		
 		//Add as LINK to the VLX
 		Node linkNode;
@@ -352,7 +181,7 @@ public class VLXGenerator {
 	    
 		catTypeNode = domVLX.createAttribute("catType");
 		linkNode.getAttributes().setNamedItem(catTypeNode);
-		catTypeNode.setNodeValue(catType);
+		catTypeNode.setNodeValue(catType);		
 		
 		id = domVLX.createAttribute("id");
 		linkNode.getAttributes().setNamedItem(id);
@@ -365,6 +194,12 @@ public class VLXGenerator {
 		end2IdNode2 = domVLX.createAttribute("end2id");
 		linkNode.getAttributes().setNamedItem(end2IdNode2);
 		end2IdNode2.setNodeValue("id-"+end2Id);
+		
+		if(null != status && "Left".equalsIgnoreCase(status.trim()) && null != catType && "Function".equalsIgnoreCase(catType.trim())){
+			Node dotStyleNode = domVLX.createAttribute("dotStyle");
+			linkNode.getAttributes().setNamedItem(dotStyleNode);
+			dotStyleNode.setNodeValue("Unconfirmed");
+		}
 	    
 		//create a <properties> element as a child on the link element
 		propertiesNode  = linkNode.appendChild(domVLX.createElement("properties"));
@@ -411,66 +246,99 @@ public class VLXGenerator {
     	return XMLDOM2String(domVLX);
 	}
 
-	/**
-	 * Called by search.jsp to generate the VLX for a search request
-	 * 
-	 * @param strType Type of search eg. company, person or product
-	 * @param strTerm search term string that the user typed in the HTML form
-	 * @return requested VLX as a string
-	 */
-	public String search(String strType, String searchTerm){
+
+	public String showCompany(String strCompanyId) {
     
 	    String queryString = new String();
 	    Document domVLX = null;
 		String typeId="";
 	    domVLX = loadVLXTemplate(VLX_TYPE_CATALOG);
 		initNodes(domVLX);
-	    
-		strType = strType.toUpperCase();
-	    
+	  	    
 	    if(domVLX==null)
 		    return null;
 	    	    
-	    // Work out what type of search we are dealing with and then perform the search.
-	    // We'll do a LIKE search so should end up with a set of matching records
-	    if (strType.equals("COMPANY")){
-	        // Get all fields from the database as defined by the Type Catalog
-			// Company type properties: [identityProperty, Name, RegistrationNo, LineOfBusiness]
-	        queryString = "SELECT id as identityProperty, name, address, creation_date " +
-				"FROM company where name like '%" + searchTerm + "%'";
-			typeId = "Company";
-	    }
-	    else if (strType.equals("PERSON")){
-	        // Get all fields from the database as defined by the Type Catalog
-			// Person type properties: [identityProperty, FirstName, LastName, FullName, Sex]
-			queryString = "SELECT id as identityProperty, first_name, last_name " +
-				"FROM person where CONCAT(first_name, ' ', last_name) like '%" + searchTerm + "%'";
-			typeId = "Person";
-	    }
-	    else if (strType.equals("ADDRESS")){
-	        // Get all fields from the database as defined by the Type Catalog
-			// Address type properties: [identityProperty, City, State, Country, IsPOBox]
-			queryString = "SELECT address as identityProperty FROM company where address like '%" + searchTerm + "%'";
-			typeId = "Address";
-	    }
-	    else{
-		   mLastError = "Unrecognised search type";
-		   return null;
-	    }
+        // Get all fields from the database as defined by the Type Catalog
+		// Company type properties: [identityProperty, Name, RegistrationNo, LineOfBusiness]
 	   
 	    Statement stmt;
 		try {
+
 		    Connection conn = connectDatabase();
 			stmt = conn.createStatement();
+
+	        queryString = "SELECT _id as identityProperty, name, address, status FROM companies WHERE _id = '" + strCompanyId + "';";
+			typeId = "Company";
 			ResultSet rs = stmt.executeQuery(queryString);
-			
+			Map<String,String> status = new HashMap<String,String>();
 			if(rs == null)
 				return null;
-	   		
 			while (rs.next()) {
 				addEntity(rs, typeId, domVLX, rs.getMetaData().getColumnCount());
 			}
 			stmt.close();
+			// company_persons
+	        queryString = "SELECT DISTINCT personId FROM company_persons WHERE companyId = '" + strCompanyId + "';";
+			Statement stmt_link = conn.createStatement();
+			ResultSet rs_link = stmt_link.executeQuery(queryString);
+			if(rs_link == null)
+				return null;
+			while (rs_link.next()) {
+				String personId = rs_link.getString(1);
+				String personQuery = "SELECT _id as identityProperty, name, address, status FROM persons WHERE _id = '" + personId + "';";
+				typeId = "Person";
+				Statement stmt_person = conn.createStatement();
+				ResultSet rs_person = stmt_person.executeQuery(personQuery);
+				if(rs_person == null)
+					return null;
+				while (rs_person.next()) {
+					String id = rs_person.getString("identityProperty");
+					String stat = rs_person.getString("status");
+					status.put(id,stat);
+					addEntity(rs_person, typeId, domVLX, rs_person.getMetaData().getColumnCount());
+				}
+				stmt_person.close();
+			}
+			//stmt_link.close();
+
+
+	        queryString = "SELECT _id as identityProperty, companyId, personId, function FROM company_persons WHERE companyId = '" + strCompanyId + "';";
+			rs_link = stmt_link.executeQuery(queryString);
+			while(rs_link.next()) {
+				addLink(rs_link, rs_link.getString(2).trim(), rs_link.getString(3).trim(), "Function", "forward", domVLX, 4, status.get(rs_link.getString("personId")));
+			}
+			//stmt_link.close();
+
+
+			// company_shares
+	        queryString = "SELECT DISTINCT personId FROM company_shares WHERE companyId = '" + strCompanyId + "';";
+			rs_link = stmt_link.executeQuery(queryString);
+			if(rs_link == null)
+				return null;
+			while (rs_link.next()) {
+				String personId = rs_link.getString(1);
+				String personQuery = "SELECT _id as identityProperty, name, address, status FROM persons WHERE _id = '" + personId + "';";
+				typeId = "Person";
+				Statement stmt_person = conn.createStatement();
+				ResultSet rs_person = stmt_person.executeQuery(personQuery);
+				if(rs_person == null)
+					return null;
+				while (rs_person.next()) {
+					addEntity(rs_person, typeId, domVLX, rs_person.getMetaData().getColumnCount());
+				}
+				stmt_person.close();
+			}
+			//stmt_link.close();
+
+
+	        queryString = "SELECT _id as identityProperty, companyId, personId, share FROM company_shares WHERE companyId = '" + strCompanyId + "';";
+			rs_link = stmt_link.executeQuery(queryString);
+			while(rs_link.next()) {
+				addLink(rs_link, rs_link.getString(2).trim(), rs_link.getString(3).trim(), "Has Shares", "forward", domVLX, 4, status.get(rs_link.getString("personId")));
+			}
+			stmt_link.close();
+
+
 			conn.close();
 			//Run IDFiller
 			//domVLX = (Document) runTransform(domVLX, ID_FILLER);
@@ -478,9 +346,115 @@ public class VLXGenerator {
 			mLastError = "Error occured in search(...): "+e.getMessage();
 			return null;
 		}
-
 	   	return XMLDOM2String(domVLX);
    }
+
+	public String showPerson(String strPersonId) {
+    
+	    String queryString = new String();
+	    Document domVLX = null;
+		String typeId="";
+	    domVLX = loadVLXTemplate(VLX_TYPE_CATALOG);
+		initNodes(domVLX);
+	  	    
+	    if(domVLX==null)
+		    return null;
+	    	    
+        // Get all fields from the database as defined by the Type Catalog
+		// Company type properties: [identityProperty, Name, RegistrationNo, LineOfBusiness]
+        queryString = "SELECT _id as identityProperty, name, address, status FROM persons WHERE _id = '" + strPersonId + "';";
+		typeId = "Person";
+	   
+	    Statement stmt;
+		try {
+
+		    Connection conn = connectDatabase();
+			stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(queryString);
+			String status = null;
+			if(rs == null)
+				return null;
+			while (rs.next()) {
+				status = rs.getString("status");
+				addEntity(rs, typeId, domVLX, rs.getMetaData().getColumnCount());
+			}
+			stmt.close();
+
+
+
+			// company_persons
+	        queryString = "SELECT DISTINCT companyId FROM company_persons WHERE personId = '" + strPersonId + "';";
+			Statement stmt_link = conn.createStatement();
+			ResultSet rs_link = stmt_link.executeQuery(queryString);
+			if(rs_link == null)
+				return null;
+			while (rs_link.next()) {
+				String companyId = rs_link.getString(1);
+				String companyQuery = "SELECT _id as identityProperty, name, address, status FROM companies WHERE _id = '" + companyId + "';";
+				typeId = "Company";
+				Statement stmt_company = conn.createStatement();
+				ResultSet rs_company = stmt_company.executeQuery(companyQuery);
+				if(rs_company == null)
+					return null;
+				while (rs_company.next()) {
+					addEntity(rs_company, typeId, domVLX, rs_company.getMetaData().getColumnCount());
+				}
+				stmt_company.close();
+			}
+			//stmt_link.close();
+
+
+	        queryString = "SELECT _id as identityProperty, companyId, personId, function FROM company_persons WHERE personId = '" + strPersonId + "';";
+			rs_link = stmt_link.executeQuery(queryString);
+			while(rs_link.next()) {
+				addLink(rs_link, rs_link.getString(2).trim(), rs_link.getString(3).trim(), "Function", "forward", domVLX, 4, status);
+			}
+			//stmt_link.close();
+
+
+			// company_shares
+	        queryString = "SELECT DISTINCT companyId FROM company_shares WHERE personId = '" + strPersonId + "';";
+			stmt_link = conn.createStatement();
+			rs_link = stmt_link.executeQuery(queryString);
+			if(rs_link == null)
+				return null;
+			while (rs_link.next()) {
+				String companyId = rs_link.getString(1);
+				String companyQuery = "SELECT _id as identityProperty, name, address, status FROM companies WHERE _id = '" + companyId + "';";
+				typeId = "Company";
+				Statement stmt_company = conn.createStatement();
+				ResultSet rs_company = stmt_company.executeQuery(companyQuery);
+				if(rs_company == null)
+					return null;
+				while (rs_company.next()) {
+					addEntity(rs_company, typeId, domVLX, rs_company.getMetaData().getColumnCount());
+				}
+				stmt_company.close();
+			}
+			//stmt_link.close();
+
+
+	        queryString = "SELECT _id as identityProperty, companyId, personId, share FROM company_shares WHERE personId = '" + strPersonId + "';";
+			rs_link = stmt_link.executeQuery(queryString);
+			while(rs_link.next()) {
+				addLink(rs_link, rs_link.getString(2).trim(), rs_link.getString(3).trim(), "Has Shares", "forward", domVLX, 4,status);
+			}
+			stmt_link.close();
+
+
+
+			conn.close();
+			//Run IDFiller
+			//domVLX = (Document) runTransform(domVLX, ID_FILLER);
+		} catch (Exception e) {
+			mLastError = "Error occured in search(...): "+e.getMessage();
+			return null;
+		}
+	   	String val = XMLDOM2String(domVLX);
+	   	System.out.println(val);
+	   	return val;
+   }
+
    
    /**
      * Loads up the VLX template into a Document object
@@ -507,60 +481,6 @@ public class VLXGenerator {
 		return document;
    	}
    
-	private void addEntity(ResultSet rs, String catType, Document domVLX, int entityFields) throws SQLException
-	{
-	    Node endNode;
-	    Node propertiesNode;
-	    Node xPosNode;
-	    Node yPosNode;
-	    Node catTypeNode;
-		String fieldName;
-		Node id;
-
-		endNode = mEndsNode.appendChild(domVLX.createElement("end"));
-			
-		// Set the catType
-		catTypeNode = domVLX.createAttribute("catType");
-		endNode.getAttributes().setNamedItem(catTypeNode);
-		catTypeNode.setNodeValue(catType);
-		// Set the ypos - just "0"
-		yPosNode = domVLX.createAttribute("yPos");
-		endNode.getAttributes().setNamedItem(yPosNode);
-		yPosNode.setNodeValue("0");
-		// Set the xpos - just "0"
-		xPosNode = domVLX.createAttribute("xPos");
-		endNode.getAttributes().setNamedItem(xPosNode);
-		xPosNode.setNodeValue("0");
-		
-		id = domVLX.createAttribute("id");
-		endNode.getAttributes().setNamedItem(id);
-		id.setNodeValue("id-"+rs.getString("identityProperty"));
-    
-		propertiesNode = endNode.appendChild(domVLX.createElement("properties"));
-        
-		// loop through the fields (properties), creating them as elements (using the record field name as the element
-		// name) and append them as a child of 'properties'. Set their value to the record value.
-		
-		//entityFields = rs.getMetaData().getColumnCount();
-		for(int i = 1; i <= entityFields; i++)
-		{
-			ResultSetMetaData rsMetaData = rs.getMetaData();
-			String propValue = null;
-		    try{
-				fieldName = rsMetaData.getColumnLabel(i);
-			    propValue = rs.getString(i);
-		    }catch(Exception e){
-		    	return;
-		    }
-		    
-			// don't add the property if the field value is null
-			if (propValue!=null){
-				Node propNode = propertiesNode.appendChild(domVLX.createElement(fieldName));
-				Node textNode = domVLX.createTextNode(propValue);
-				propNode.appendChild(textNode);
-			}
-		}
-	}
 		
 	/**
 	 * Applies the IDFiller.xslt to the newly generated VLX Document.  This must be done
@@ -626,10 +546,7 @@ public class VLXGenerator {
 			mLastError = "Error serializing VLX document: "+e.getMessage();
 			return null;
 		}
-		 System.out.println(resultStringWriter.toString());
-		 String val = resultStringWriter.toString();
-		 
-		return val;
+		return resultStringWriter.toString();
 	}
 }
 
