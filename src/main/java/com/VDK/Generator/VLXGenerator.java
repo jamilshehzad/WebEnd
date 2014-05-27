@@ -44,6 +44,8 @@ class VLXProperty
  * @filename VLXGenerator.java
  */
 public class VLXGenerator {
+	
+	//Change Database settings, connection manager 
 	  
 	 private Node mEndsNode;
 	 private Node mLinksNode;
@@ -51,7 +53,7 @@ public class VLXGenerator {
 	 /*private final String DATABASE_DRIVER = "com.mysql.jdbc.Driver";
 	 private final String DATA_SOURCE_CONNECTION_STRING = "jdbc:mysql://localhost/ixvdata";
 	 //private final String DATA_SOURCE_CONNECTION_STRING = "jdbc:mysql://localhost/ixvsampledata";
-	 private final String VLX_TYPE_CATALOG = "VLXTemplate.vlx";
+	 private final String VLX_TYPE_CATALOG = "VLXCatalog.vlx";
 	 private final String VLX_ERROR_TEMPLATE = "VLXErrorTemplate.vlx";
 	 private final String ID_FILLER = "IDfiller.xslt";
 	 private final String USER = "root";
@@ -85,7 +87,7 @@ public class VLXGenerator {
 	 */
 	public Connection connectDatabase() throws Exception{
 	 	Class.forName(DATABASE_DRIVER).newInstance();
-		/*return DriverManager.getConnection(DATA_SOURCE_CONNECTION_STRING,USER,PASS);*/
+		//return DriverManager.getConnection(DATA_SOURCE_CONNECTION_STRING,USER,PASS);
 	 	return DriverManager.getConnection(DATA_SOURCE_CONNECTION_STRING);
    }
       
@@ -195,7 +197,7 @@ public class VLXGenerator {
 		linkNode.getAttributes().setNamedItem(end2IdNode2);
 		end2IdNode2.setNodeValue("id-"+end2Id);
 		
-		if(null != status && "Left".equalsIgnoreCase(status.trim()) && null != catType && "Function".equalsIgnoreCase(catType.trim())){
+		if(null != status && !status.trim().equalsIgnoreCase("") && "Function".equalsIgnoreCase(catType.trim())){
 			Node dotStyleNode = domVLX.createAttribute("dotStyle");
 			linkNode.getAttributes().setNamedItem(dotStyleNode);
 			dotStyleNode.setNodeValue("Unconfirmed");
@@ -284,6 +286,22 @@ public class VLXGenerator {
 			if(rs_link == null)
 				return null;
 			while (rs_link.next()) {
+				
+				
+				queryString = "SELECT _id as identity, left_company FROM company_persons WHERE companyId = '" + strCompanyId + "' and personId = '"+rs_link.getString("personId")+"';";
+				Statement stmt_link1 = conn.createStatement();
+				ResultSet rs_link1 = stmt_link1.executeQuery(queryString);
+				
+				if(null != rs_link1){
+					while(rs_link1.next()){
+
+						String stat = rs_link1.getString("left_company");
+						status.put(rs_link.getString("personId"),stat);
+					}
+				}
+				
+				
+				
 				String personId = rs_link.getString(1);
 				String personQuery = "SELECT _id as identityProperty, name, address, status FROM persons WHERE _id = '" + personId + "';";
 				typeId = "Person";
@@ -293,8 +311,6 @@ public class VLXGenerator {
 					return null;
 				while (rs_person.next()) {
 					String id = rs_person.getString("identityProperty");
-					String stat = rs_person.getString("status");
-					status.put(id,stat);
 					addEntity(rs_person, typeId, domVLX, rs_person.getMetaData().getColumnCount());
 				}
 				stmt_person.close();
@@ -371,11 +387,9 @@ public class VLXGenerator {
 		    Connection conn = connectDatabase();
 			stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(queryString);
-			String status = null;
 			if(rs == null)
 				return null;
 			while (rs.next()) {
-				status = rs.getString("status");
 				addEntity(rs, typeId, domVLX, rs.getMetaData().getColumnCount());
 			}
 			stmt.close();
@@ -383,12 +397,28 @@ public class VLXGenerator {
 
 
 			// company_persons
+			Map<String,String> status = new HashMap<String,String>();
 	        queryString = "SELECT DISTINCT companyId FROM company_persons WHERE personId = '" + strPersonId + "';";
 			Statement stmt_link = conn.createStatement();
 			ResultSet rs_link = stmt_link.executeQuery(queryString);
 			if(rs_link == null)
 				return null;
 			while (rs_link.next()) {
+				
+				
+				
+				queryString = "SELECT _id as identity, left_company FROM company_persons WHERE personId = '" + strPersonId + "' and companyId = '" +rs_link.getString("companyId")+ "';";
+				Statement stmt_link1 = conn.createStatement();
+				ResultSet rs_link1 = stmt_link1.executeQuery(queryString);
+				
+				if(rs_link1 != null){
+					while(rs_link1.next()){
+						String stat = rs_link1.getString("left_company");
+						status.put(rs_link.getString("companyId"), stat);
+					}
+				}
+				
+				
 				String companyId = rs_link.getString(1);
 				String companyQuery = "SELECT _id as identityProperty, name, address, status FROM companies WHERE _id = '" + companyId + "';";
 				typeId = "Company";
@@ -407,7 +437,7 @@ public class VLXGenerator {
 	        queryString = "SELECT _id as identityProperty, companyId, personId, function FROM company_persons WHERE personId = '" + strPersonId + "';";
 			rs_link = stmt_link.executeQuery(queryString);
 			while(rs_link.next()) {
-				addLink(rs_link, rs_link.getString(2).trim(), rs_link.getString(3).trim(), "Function", "forward", domVLX, 4, status);
+				addLink(rs_link, rs_link.getString(2).trim(), rs_link.getString(3).trim(), "Function", "forward", domVLX, 4, status.get(rs_link.getString("companyId")));
 			}
 			//stmt_link.close();
 
@@ -437,7 +467,7 @@ public class VLXGenerator {
 	        queryString = "SELECT _id as identityProperty, companyId, personId, share FROM company_shares WHERE personId = '" + strPersonId + "';";
 			rs_link = stmt_link.executeQuery(queryString);
 			while(rs_link.next()) {
-				addLink(rs_link, rs_link.getString(2).trim(), rs_link.getString(3).trim(), "Has Shares", "forward", domVLX, 4,status);
+				addLink(rs_link, rs_link.getString(2).trim(), rs_link.getString(3).trim(), "Has Shares", "forward", domVLX, 4,status.get(rs_link.getString("companyId")));
 			}
 			stmt_link.close();
 
