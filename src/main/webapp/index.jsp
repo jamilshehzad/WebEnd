@@ -120,6 +120,10 @@ function OnMenuCommand(strParam)
 		{ 
 			showProperties(objChart, lastClickedOnID);
 		}
+		else if(strParam == 103) 
+		{ 
+			objChart.setElementDeleted(lastClickedOnID,true,false);
+		}
 	}
 	lastClickedOnID = "";
 }
@@ -149,6 +153,7 @@ function OnContextMenu(strParam){
 			objChart.addMenuItem(101,"Show Relationships");
 		}
 		objChart.addMenuItem(102,"Show Properties");
+		objChart.addMenuItem(103,"Delete");
 	}	
 
   	objChart.showMenu();
