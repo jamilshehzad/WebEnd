@@ -63,7 +63,7 @@ public class VLXGenerator {
 	 private String mLastError="";
 	 
 	 private final String DATABASE_DRIVER = "mongodb.jdbc.MongoDriver";
-	 private final String DATA_SOURCE_CONNECTION_STRING = "jdbc:mongo://localhost:8444/meteor";
+	 private final String DATA_SOURCE_CONNECTION_STRING = "jdbc:mongo://localhost:3001/meteor";
 	 private final String VLX_TYPE_CATALOG = "VLXTemplate.vlx";
 	 private final String VLX_ERROR_TEMPLATE = "VLXErrorTemplate.vlx";
 	 private final String ID_FILLER = "IDfiller.xslt";
